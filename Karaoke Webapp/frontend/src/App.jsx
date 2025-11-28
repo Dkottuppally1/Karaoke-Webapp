@@ -133,6 +133,7 @@ function App() {
         <header className="header">
           <h1>🎤 Karaoke Generator</h1>
           <p className="subtitle">AI-powered source separation for perfect karaoke tracks</p>
+          <p className="creator">Created by Dkottuppally</p>
           {backendStatus && (
             <div className={`backend-status ${backendStatus.model_loaded ? 'ready' : 'loading'}`}>
               {backendStatus.model_loaded ? '✅ Backend Ready' : '⏳ Model Loading...'}
@@ -266,6 +267,7 @@ function App() {
 
         <footer className="footer">
           <p>
+            Created by Dkottuppally • 
             Powered by Demucs source separation • 
             Upload high-quality audio files for best results
           </p>
