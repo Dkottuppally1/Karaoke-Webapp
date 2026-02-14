@@ -1,0 +1,49 @@
+# Toy P2P search: 5+ peers, 5 keyword-files per peer, two measurements
+
+SIZE 5
+CYCLES 10
+CYCLE 10000
+MINDELAY 0
+MAXDELAY 100
+DROP 0
+random.seed 12345
+
+network.size SIZE
+simulation.endtime CYCLE*CYCLES
+simulation.logtime CYCLE
+
+# Protocols
+protocol.link peersim.core.IdleProtocol
+
+# P2P search: 5 files (keywords) per peer; keywords used as search terms
+protocol.search example.p2psearch.P2PSearchProtocol
+protocol.search.linkable link
+protocol.search.transport tr
+protocol.search.keywords jazz,piano,blues,rock,classical,metal,pop,folk
+protocol.search.ttl 10
+
+protocol.urt UniformRandomTransport
+protocol.urt.mindelay (CYCLE*MINDELAY)/100
+protocol.urt.maxdelay (CYCLE*MAXDELAY)/100
+
+protocol.tr UnreliableTransport
+protocol.tr.transport urt
+protocol.tr.drop DROP
+
+# Initialization: wire overlay (each peer has k neighbors)
+init.rndlink WireKOut
+init.rndlink.k 2
+init.rndlink.protocol link
+
+# Control 0: at time 0, schedule random searches (origin peer + keyword)
+control.0 example.p2psearch.SearchObserver
+control.0.protocol search
+control.0.at 0
+control.0.numqueries 20
+
+# Control 1: after simulation (FINAL), print the two measurements
+control.1 example.p2psearch.SearchReporter
+control.1.from 1
+control.1.until 1
+control.1.step 1
+control.1.FINAL true
